@@ -1,5 +1,8 @@
 from datetime import datetime, timedelta
 from typing import List
+import os
+import logging
+import git
 
 
 def generate_date_list(start_date_str, end_date_str, exclude_days=['Friday', 'Saturday']):
@@ -18,7 +21,6 @@ def generate_date_list(start_date_str, end_date_str, exclude_days=['Friday', 'Sa
         current_date += timedelta(days=1)
 
     return date_list
-
 
 
 def longest_consecutive_dates(date_column : List[datetime] ):
@@ -63,3 +65,21 @@ def _str_to_int(x):
         print('ERREED while converting : ', x)
         x = -1
     return x
+
+
+REPO_URL = 'https://github.com/robinnarsinghranabhat/nepse-floorsheet-daily-scrape.git'  # Replace with the actual repo URL
+LOCAL_REPO_PATH = '/Users/robinakan/projects/nepse-analytics-backend/dependency/floorsheet_repo'
+
+def clone_or_pull_repo():
+    if not os.path.exists(LOCAL_REPO_PATH):
+        logging.info("Cloning Repo")
+        os.makedirs(LOCAL_REPO_PATH)
+        fs_repo = git.Repo.clone_from(REPO_URL, LOCAL_REPO_PATH)
+    else:
+        logging.info("Repo Exists. Pulling latest changes.")
+        repo = git.Repo(LOCAL_REPO_PATH)
+        origin = repo.remotes.origin
+        origin.pull()
+
+
+# clone_or_pull_repo()

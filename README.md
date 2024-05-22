@@ -6,6 +6,14 @@
 * [Poetry](https://python-poetry.org/) for Python package and environment management.
 
 ## Local Development
+- pip install --upgrade pip
+- python3 -m venv .venv             
+- source activate ./.venv/bin/activate
+- pip install -r init_requirements.txt # Setup Poetry and Psycopg. Somehow, couldn't install from poetry
+- poetry install
+
+### Setup ipykernel
+- python -m pip install ipykernel -U --force-reinstall
 
 First install poerty
 - pip install poetry==1.8.3
