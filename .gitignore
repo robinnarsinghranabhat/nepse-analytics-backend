@@ -6,6 +6,6 @@ app.egg-info
 htmlcov
 .cache
 .venv
+.DS_Store
 
-
-./dependency
+/dependency
