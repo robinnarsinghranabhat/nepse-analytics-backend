@@ -24,6 +24,8 @@ def parse_cors(v: Any) -> Union[list[str], str]:
 
 
 class Settings(BaseSettings):
+
+    daily_trades_csv_path = "/home/robin/projects/sharesansar_datascrape/data"
     model_config = SettingsConfigDict(
         env_file=".env", env_ignore_empty=True, extra="ignore"
     )
