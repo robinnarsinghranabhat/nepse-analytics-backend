@@ -1,14 +1,12 @@
 from datetime import datetime, timedelta
-from typing import List
-import os
-import logging
-import git
 
 
-def generate_date_list(start_date_str, end_date_str, exclude_days=['Friday', 'Saturday']):
+def generate_date_list(
+    start_date_str, end_date_str, exclude_days=["Friday", "Saturday"]
+):
     # Convert start and end date strings to datetime objects
-    start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
-    end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+    start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+    end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
 
     # Initialize an empty list to store dates
     date_list = []
@@ -16,17 +14,17 @@ def generate_date_list(start_date_str, end_date_str, exclude_days=['Friday', 'Sa
     # Iterate through dates from start to end, adding each date to the list
     current_date = start_date
     while current_date <= end_date:
-        if current_date.strftime('%A') not in exclude_days:
-            date_list.append(current_date.strftime('%Y-%m-%d'))
+        if current_date.strftime("%A") not in exclude_days:
+            date_list.append(current_date.strftime("%Y-%m-%d"))
         current_date += timedelta(days=1)
 
     return date_list
 
 
-def longest_consecutive_dates(date_column : List[datetime] ):
+def longest_consecutive_dates(date_column: list[datetime]):
     """
-    Takes in List of datetimes. 
-    Returns start and end date without having any gaps 
+    Takes in List of datetimes.
+    Returns start and end date without having any gaps
     """
     date_column = sorted(set(date_column))  # Remove duplicates and sort dates
     longest_chain = []
@@ -51,7 +49,6 @@ def longest_consecutive_dates(date_column : List[datetime] ):
         return start_date, end_date
     else:
         return None, None
-    
 
 
 def _str_to_int(x):
@@ -59,27 +56,9 @@ def _str_to_int(x):
     Converts numerical string (like 10,999.00) to integer
     """
     try:
-        x = float(x.replace(',', ''))
+        x = float(x.replace(",", ""))
         # x = x/1000
-    except Exception as e:
-        print('ERREED while converting : ', x)
+    except Exception:
+        print("ERREED while converting : ", x)
         x = -1
     return x
-
-
-REPO_URL = 'https://github.com/robinnarsinghranabhat/nepse-floorsheet-daily-scrape.git'  # Replace with the actual repo URL
-LOCAL_REPO_PATH = '/Users/robinakan/projects/nepse-analytics-backend/dependency/floorsheet_repo'
-
-def clone_or_pull_repo():
-    if not os.path.exists(LOCAL_REPO_PATH):
-        logging.info("Cloning Repo")
-        os.makedirs(LOCAL_REPO_PATH)
-        fs_repo = git.Repo.clone_from(REPO_URL, LOCAL_REPO_PATH)
-    else:
-        logging.info("Repo Exists. Pulling latest changes.")
-        repo = git.Repo(LOCAL_REPO_PATH)
-        origin = repo.remotes.origin
-        origin.pull()
-
-
-# clone_or_pull_repo()
