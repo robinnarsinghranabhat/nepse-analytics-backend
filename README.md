@@ -7,6 +7,12 @@
 
 ## Local Development
 
+First install poerty
+- pip install poetry==1.8.3
+
+Then use poetry to setup everything else.
+- porety build ?
+
 * Start the stack with Docker Compose:
 
 ```bash
