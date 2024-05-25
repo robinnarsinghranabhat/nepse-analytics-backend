@@ -12,11 +12,18 @@ import pandas as pd
 from nepse import Nepse
 
 SECTORS = [
-    "Finance",
-    "Hydro Power",
     "Microfinance",
     "Commercial Banks",
+    "Hydro Power",
+    "Tradings",
+    "Finance",
+    "Manufacturing And Processing",
+    "Hotels And Tourism",
+    "Investment",
     "Development Banks",
+    "Non Life Insurance",
+    "Life Insurance",
+    "Others",
 ]
 
 ## Generic Company List

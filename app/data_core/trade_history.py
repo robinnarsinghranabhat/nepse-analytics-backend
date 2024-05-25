@@ -8,22 +8,25 @@
 
 import glob
 import logging
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 import numpy as np
 import pandas as pd
 
+from app import date_cache
 from app.core.config import settings
 from app.data_core.constants import company_dict, get_company_details
 from app.data_core.data_utils import _str_to_int, generate_date_list
 
 
-def load_daily_trades():
+def load_daily_trades(data_path):
     """
+    `data_path` : Directory with csv files for daily prices.
+
     NOTE : As Time progresses, this will be memory intensive.
     """
     all_dfs = []
-    for fpath in glob.glob(settings.daily_trades_csv_path + "/*.csv"):
+    for fpath in glob.glob(data_path + "/*.csv"):
         date = fpath.split("/")[-1].strip(".csv")
         per_day_df = pd.read_csv(fpath)
         per_day_df["date_scraped"] = date
@@ -155,14 +158,27 @@ def final_data_cleanup(all_dfs: pd.DataFrame):
     return all_dfs
 
 
-def load_historical_db():
+def load_historical_db(data_path):
+
+    today = str(datetime.today().date())
+    with open(date_cache, "r+") as f:
+        cached_date = f.read()
+        if cached_date == today:
+            logging.info("Loading Cached Historical-Trade DB")
+            return pd.read_csv("./cached_db.csv")
+        else:
+            f.seek(0)
+            f.write(today)
+            f.truncate()
+    
     logging.info("Initiazing Historical-Trade DB load")
-    all_dfs = load_daily_trades()
+    all_dfs = load_daily_trades(data_path)
     all_dfs = filter_scrips(all_dfs)
     all_dfs = merge_company_details_and_filter(all_dfs)
     all_dfs = final_data_cleanup(all_dfs)
     logging.info("Completed Historical-Trade DB load")
+
+    all_dfs.to_csv("./cached_db.csv", index=False)
     return all_dfs
 
-
-# history_db = load_historical_db()
+prices_db = load_historical_db(settings.daily_trades_csv_path)
