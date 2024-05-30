@@ -1,10 +1,8 @@
 import secrets
 import warnings
-from typing import Annotated, Any, Literal, Union, Optional
+from typing import Any, Literal, Union
 
 from pydantic import (
-    AnyUrl,
-    BeforeValidator,
     HttpUrl,
     PostgresDsn,
     computed_field,
@@ -24,8 +22,17 @@ def parse_cors(v: Any) -> Union[list[str], str]:
 
 
 class Settings(BaseSettings):
+    FS_REPO_URL: str = "https://github.com/robinnarsinghranabhat/nepse-floorsheet-daily-scrape.git"  # Replace with the actual repo URL
+    FS_LOCAL_REPO_PATH: str = (
+        "/Users/robinakan/projects/nepse-analytics-backend/dependency/floorsheet_repo"
+    )
 
-    daily_trades_csv_path = "/home/robin/projects/sharesansar_datascrape/data"
+    DAILY_PRICES_REPO_URL: str = "https://github.com/robinnarsinghranabhat/sharesansar_datascrape.git"  # Replace with the actual repo URL
+    DAILY_PRICES_LOCAL_REPO_PATH: str = (
+        "/Users/robinakan/projects/nepse-analytics-backend/dependency/daily_trades_repo"
+    )
+
+    daily_trades_csv_path: str = DAILY_PRICES_LOCAL_REPO_PATH + "/data"
     model_config = SettingsConfigDict(
         env_file=".env", env_ignore_empty=True, extra="ignore"
     )
@@ -47,7 +54,10 @@ class Settings(BaseSettings):
     # BACKEND_CORS_ORIGINS: Annotated[
     #     Union[ list[AnyUrl] , str ], BeforeValidator(parse_cors)
     # ] = []
-    BACKEND_CORS_ORIGINS: Union[list[str], str] = []
+    BACKEND_CORS_ORIGINS: Union[list[str], str] = [
+        "http://localhost:3000",  # Your React app URL
+    "http://localhost:8000",
+    ]
 
     PROJECT_NAME: str = ""
     SENTRY_DSN: Union[HttpUrl, None] = None
